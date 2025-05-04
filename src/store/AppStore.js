@@ -2,15 +2,11 @@ import {makeAutoObservable} from "mobx";
 import UserStore from "./modules/UserStore";
 import {message, notification} from "antd";
 import $api from "../http";
-import WishlistStore from "./modules/WishlistStore";
-import SharedStore from "./modules/SharedStore";
 import ServiceStore from "./modules/ServiceStore";
 
 export default class AppStore {
 
     users = new UserStore(this);
-    wishlists = new WishlistStore(this)
-    sharedStore = new SharedStore(this)
     services = new ServiceStore(this)
 
     userState = null;

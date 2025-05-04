@@ -10,12 +10,6 @@ import Settings from "./pages/users/Settings";
 import Page404 from "./pages/Page404";
 import UserDeleted from "./pages/UserDeleted";
 import MainPage from "./pages/MainPage";
-import SelectWishlist from "./components/wishlist/SelectWishlist";
-import Booking from "./pages/booking/Booking";
-import TmpSubscribe from "./pages/saved/TmpSubscribe";
-import UserBooking from "./pages/booking/UserBooking";
-import SubscriptionsWishlists from "./pages/saved/SubscriptionsWishlists";
-import SelectSubscriptionWishlist from "./components/wishlist/SelectSubscriptionWishlist";
 import AfterLoginPage from "./pages/auth/AfterLoginPage";
 import MyServices from "./pages/My";
 import ServicePage from "./pages/ServicePage";
@@ -31,13 +25,6 @@ function App() {
                 <Route path={'/'} element={<MainPage/>}/>
                 <Route path={'/my'} element={<MyServices/>}/>
                 <Route path={'/services/:id'} element={<ServicePage />} />
-
-                <Route path={'/wishlists/:wishlistId'} element={<SelectWishlist/>}/>
-                <Route path={'/shared/booking/:sharedId'} element={<Booking/>}/>
-                <Route path={'/shared/subscribe/:sharedId'} element={<TmpSubscribe/>}/>
-                <Route path={'/booking'} element={<UserBooking/>}/>
-                <Route path={'/subscriptions'} element={<SubscriptionsWishlists/>}/>
-                <Route path={'/subscriptions/:wishlistId'} element={<SelectSubscriptionWishlist/>}/>
 
                 <Route path={'/users/settings'} element={<Settings/>}/>
                 <Route path={'/users/null'} element={<UserDeleted/>}/>

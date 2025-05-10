@@ -69,10 +69,6 @@ export default class AppStore {
         const username = payload.sub;
         const role = payload.role;
         const clientId = payload.clientId;
-
-        console.log(role, clientId);
-        console.log(username)
-
         this.user = {clientId, username, role};
         this.isAuth = true;
 
@@ -93,7 +89,6 @@ export default class AppStore {
     }
 
     logout = () => {
-        console.log('logout')
         localStorage.removeItem('token');
         this.user = null;
         this.isAuth = false;
@@ -126,8 +121,6 @@ export default class AppStore {
                     message.error('Не найдено');
                     break;
                 default: {
-                    console.log(123)
-                    console.log(e)
                     notification.error({
                         message: e.response.data.message,
                         description: e.response.code,

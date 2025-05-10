@@ -131,7 +131,6 @@ const UsersTablePage = () => {
         }
         if (firstFetchDone) return;
         fetchData();
-        console.log('fetchData')
     }, [searchParams, store, setFirstCheckDone, updateData, firstFetchDone]);
 
     const [days, setDays] = useState(0);

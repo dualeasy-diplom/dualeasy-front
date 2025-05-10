@@ -13,6 +13,8 @@ import MainPage from "./pages/MainPage";
 import AfterLoginPage from "./pages/auth/AfterLoginPage";
 import MyServices from "./pages/My";
 import ServicePage from "./pages/ServicePage";
+import CalendarPage from "./pages/CalendarPage";
+import BookedSlotsPage from "./pages/BookedSlotsPage";
 
 function App() {
     return (
@@ -23,8 +25,10 @@ function App() {
             <Route element={<IsAuth/>}>
                 <Route path={'/services'} element={<MainPage/>}/>
                 <Route path={'/'} element={<MainPage/>}/>
+                <Route path={'/calendar'} element={<CalendarPage/>}/>
                 <Route path={'/my'} element={<MyServices/>}/>
                 <Route path={'/services/:id'} element={<ServicePage />} />
+                <Route path="/bookings" element={<BookedSlotsPage />} />
 
                 <Route path={'/users/settings'} element={<Settings/>}/>
                 <Route path={'/users/null'} element={<UserDeleted/>}/>

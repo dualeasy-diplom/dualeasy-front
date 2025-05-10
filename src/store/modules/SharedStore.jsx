@@ -20,7 +20,6 @@ export default class SharedStore {
                 wishlistId: values.id,
                 accessMode: values.mode
             });
-            console.log(json)
             let res = await $api.post(`/link`, json);
             return res.data
         } catch (e) {
@@ -84,7 +83,6 @@ export default class SharedStore {
     getAll = async(id) => {
         try {
             const response = await $api.get(`/subscriptions`);
-            console.log(response)
             return response.data;
         } catch (e) {
             this.rootStore.httpError(e);

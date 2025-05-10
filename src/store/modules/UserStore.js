@@ -196,7 +196,6 @@ export default class UserStore {
     delete = async (values) => {
         try {
             const json = JSON.stringify(values);
-            console.log(json)
             await $api.post(`/users/delete`, json);
             message.success('Аккаунт успешно удален');
             return true;

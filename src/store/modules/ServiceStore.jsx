@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import {makeAutoObservable} from "mobx";
 import type AppStore from "../AppStore";
 import $api from "../../http";
 
@@ -19,7 +19,6 @@ export default class ServiceStore {
     loadServices = async () => {
         try {
             const response = await $api.get("/services");
-            console.log(response)
             this.services = response.data;
         } catch (e) {
             this.rootStore.httpError(e);
@@ -29,7 +28,6 @@ export default class ServiceStore {
     loadMyServices = async () => {
         try {
             const response = await $api.get("/services/service/client/my");
-            console.log(response)
             this.services = response.data;
         } catch (e) {
             this.rootStore.httpError(e);
@@ -80,7 +78,7 @@ export default class ServiceStore {
         }
     };
 
-    leaveFeedback = async ({ serviceId, score, text }) => {
+    leaveFeedback = async ({serviceId, score, text}) => {
         try {
             await $api.post("/feedback", {
                 serviceId,
@@ -91,4 +89,58 @@ export default class ServiceStore {
             this.rootStore.httpError(e);
         }
     };
+
+    createSlots = async (slots: { start: string, end: string }[]) => {
+        const payload = {
+            slots: slots.map(s => ({
+                startTime: s.start,
+                endTime: s.end,
+            })),
+        };
+        try {
+            await $api.post("/slots", payload);
+        } catch (e) {
+            this.rootStore.httpError(e);
+        }
+    };
+
+    // В ServiceStore.ts
+    getSlotsByOwner = async (ownerId: string) => {
+        try {
+            const response = await $api.get(`/slots/owner/${ownerId}`);
+            return response.data; // ожидается, что это массив CalendarSlot
+        } catch (e) {
+            this.rootStore.httpError(e);
+            return [];
+        }
+    };
+
+    bookSlot = async (
+        slotId: number,
+        serviceId: number,
+        note?: string,) => {
+        try {
+            const response = await $api.post(`/slots/${slotId}/book`, {
+                serviceId,
+                note: note || null,
+            });
+            return response.data;
+        } catch (e) {
+            this.rootStore.httpError(e);
+            throw e;
+        }
+    };
+
+
+    bookedSlots = [];
+
+    loadBookedSlots = async () => {
+        try {
+            const response = await $api.get("/slots/owner/booked");
+            this.bookedSlots = response.data;
+        } catch (e) {
+            this.rootStore.httpError(e);
+        }
+    };
+
 }

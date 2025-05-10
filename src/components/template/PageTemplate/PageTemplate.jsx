@@ -55,7 +55,7 @@ const PageTemplate = ({children, title}) => {
                         <Button type={"dashed"} onClick={() => window.history.back()}>Назад</Button>
                     </div>
                     <div className={st.goPosts}>
-                        <Link to={"/booking"}><Button type={"dashed"}>Мои записи</Button></Link>
+                        <Link to={"/bookings"}><Button type={"dashed"}>Мои записи</Button></Link>
                         <Link to={"/my"}><Button type={"dashed"}>Мои услуги</Button></Link>
                         <Dropdown
                             placement={"bottomRight"}

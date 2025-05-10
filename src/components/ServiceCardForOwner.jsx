@@ -1,8 +1,8 @@
-import {Card, Rate, Button, Popconfirm, Tooltip} from "antd";
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
-import {useNavigate} from "react-router-dom";
+import { Card, Rate, Button, Popconfirm, Tooltip } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
-const ServiceCardForOwner = ({service, onEdit, onDelete}) => {
+const ServiceCardForOwner = ({ service, onEdit, onDelete }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -10,7 +10,11 @@ const ServiceCardForOwner = ({service, onEdit, onDelete}) => {
     };
 
     return (
-        <Card bodyStyle={{ padding: 24 }} style={{ marginBottom: 16, cursor: "pointer" }} onClick={handleClick}>
+        <Card
+            bodyStyle={{ padding: 24 }}
+            style={{ marginBottom: 16, cursor: "pointer" }}
+            onClick={handleClick}
+        >
             <div className="flex gap-6">
                 {/* Фото */}
                 <div
@@ -43,13 +47,20 @@ const ServiceCardForOwner = ({service, onEdit, onDelete}) => {
                                 <Button
                                     icon={<EditOutlined />}
                                     type="text"
-                                    onClick={() => onEdit(service)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(service);
+                                    }}
                                 />
                             </Tooltip>
                             <Tooltip title="Удалить">
                                 <Popconfirm
                                     title="Удалить услугу?"
-                                    onConfirm={() => onDelete(service.id)}
+                                    onConfirm={(e) => {
+                                        e?.stopPropagation();
+                                        onDelete(service.id);
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
                                     okText="Да"
                                     cancelText="Нет"
                                 >
@@ -57,6 +68,7 @@ const ServiceCardForOwner = ({service, onEdit, onDelete}) => {
                                         icon={<DeleteOutlined />}
                                         type="text"
                                         danger
+                                        onClick={(e) => e.stopPropagation()}
                                     />
                                 </Popconfirm>
                             </Tooltip>

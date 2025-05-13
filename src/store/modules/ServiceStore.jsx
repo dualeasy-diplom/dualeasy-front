@@ -18,7 +18,11 @@ export default class ServiceStore {
 
     loadServices = async () => {
         try {
-            const response = await $api.get("/services");
+            const endpoint = this.searchQuery
+                ? `/search?keyword=${encodeURIComponent(this.searchQuery)}`
+                : "/services";
+
+            const response = await $api.get(endpoint);
             this.services = response.data;
         } catch (e) {
             this.rootStore.httpError(e);

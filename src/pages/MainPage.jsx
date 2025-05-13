@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 
 const MainPage = () => {
 
-    const { store } = useContext(Context);
+    const {store} = useContext(Context);
     const [query, setQuery] = useState("");
 
     useEffect(() => {
@@ -27,6 +27,7 @@ const MainPage = () => {
                         placeholder="Введите ключевые слова"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
+                        onPressEnter={handleSearch}
                     />
                     <Button onClick={handleSearch}>Поиск</Button>
                 </div>

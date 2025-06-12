@@ -22,22 +22,19 @@ function App() {
             <Route path="/after-login" element={<AfterLoginPage />} />
             <Route path={'/login'} element={<LoginPage/>}/>
             <Route path={'/register'} element={<RegisterPage/>}/>
+            <Route path={'/services'} element={<MainPage/>}/>
+            <Route path={'/'} element={<MainPage/>}/>
+            
+            <Route path={'/services/:id'} element={<ServicePage />} />
             <Route element={<IsAuth/>}>
-                <Route path={'/services'} element={<MainPage/>}/>
-                <Route path={'/'} element={<MainPage/>}/>
                 <Route path={'/calendar'} element={<CalendarPage/>}/>
                 <Route path={'/my'} element={<MyServices/>}/>
-                <Route path={'/services/:id'} element={<ServicePage />} />
                 <Route path="/bookings" element={<BookedSlotsPage />} />
-
                 <Route path={'/users/settings'} element={<Settings/>}/>
                 <Route path={'/users/null'} element={<UserDeleted/>}/>
                 <Route path={'/users/:username'} element={<Profile/>}/>
-
                 <Route path={'/users'} element={<UsersTablePage/>}/>
-
                 <Route path={'/404'} element={<Page404/>}/>
-
                 <Route path={'/logout'} element={<LogoutComponent/>}/>
             </Route>
         </Routes>

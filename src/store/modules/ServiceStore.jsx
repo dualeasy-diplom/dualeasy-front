@@ -5,6 +5,7 @@ import $api from "../../http";
 export default class ServiceStore {
     rootStore: AppStore;
     services = [];
+    categories = []; // <- добавлено
     searchQuery = "";
 
     constructor(rootStore: AppStore) {
@@ -29,6 +30,15 @@ export default class ServiceStore {
         }
     };
 
+    loadCategories = async () => {
+        try {
+            const response = await $api.get("/categories");
+            this.categories = response.data;
+        } catch (e) {
+            this.rootStore.httpError(e);
+        }
+    };
+
     loadMyServices = async () => {
         try {
             const response = await $api.get("/services/service/client/my");
@@ -38,9 +48,13 @@ export default class ServiceStore {
         }
     };
 
-    createService = async (data) => {
+    createService = async (formData) => {
         try {
-            await $api.post("/services/create", data); // убедись, что endpoint и формат соответствуют
+            await $api.post("/services/create", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
         } catch (e) {
             this.rootStore.httpError(e);
         }

@@ -1,5 +1,3 @@
-// --- ServicePage.js ---
-
 import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
@@ -7,11 +5,11 @@ import { Context } from "../index";
 import PageTemplate from "../components/template/PageTemplate/PageTemplate";
 import {
     Button, Card, Rate, Spin, Avatar,
-    Modal, Form, Input, Tooltip, Collapse, message
+    Modal, Form, Input, Collapse, message
 } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-
+import 'dayjs/locale/ru';
+dayjs.locale('ru');
 const { Panel } = Collapse;
 
 const ServicePage = () => {
@@ -22,6 +20,7 @@ const ServicePage = () => {
     const [loading, setLoading] = useState(true);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [slotsByDay, setSlotsByDay] = useState({});
     const [selectedSlotId, setSelectedSlotId] = useState(null);
     const [note, setNote] = useState("");
@@ -44,12 +43,11 @@ const ServicePage = () => {
         try {
             const slots = await store.services.getSlotsByOwner(service.clientId);
             const grouped = {};
-            slots
-                .forEach(s => {
-                    const date = dayjs(s.startTime).format("dddd, DD.MM");
-                    if (!grouped[date]) grouped[date] = [];
-                    grouped[date].push(s);
-                });
+            slots.forEach(s => {
+                const date = dayjs(s.startTime).format("dddd, DD.MM");
+                if (!grouped[date]) grouped[date] = [];
+                grouped[date].push(s);
+            });
             setSlotsByDay(grouped);
             setIsBookingModalOpen(true);
         } catch (e) {
@@ -58,6 +56,11 @@ const ServicePage = () => {
     };
 
     const handleLeaveFeedback = async (values) => {
+        if (!store.user) {
+            message.warning("Авторизуйтесь, чтобы оставить отзыв");
+            return;
+        }
+
         await store.services.leaveFeedback({
             serviceId: Number(id),
             score: values.rating,
@@ -69,7 +72,13 @@ const ServicePage = () => {
     };
 
     const handleBook = async () => {
+        if (!store.user) {
+            message.warning("Авторизуйтесь, чтобы записаться на услугу");
+            return;
+        }
+
         if (!selectedSlotId) return;
+
         try {
             await store.services.bookSlot(selectedSlotId, service.id, note);
             message.success("Вы успешно записались на услугу");
@@ -80,8 +89,6 @@ const ServicePage = () => {
             message.error("Ошибка при записи на услугу");
         }
     };
-
-    const currentUserId = store.user.clientId;
 
     if (loading || !service) {
         return <Spin size="large" className="flex justify-center mt-20" />;
@@ -96,7 +103,14 @@ const ServicePage = () => {
                             <img
                                 src={service.mainPhoto || "/placeholder.png"}
                                 alt={service.name}
-                                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }}
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    borderRadius: 8,
+                                    cursor: "pointer"
+                                }}
+                                onClick={() => setIsImageModalOpen(true)}
                             />
                         </div>
 
@@ -109,9 +123,27 @@ const ServicePage = () => {
                             <div className="text-lg">
                                 <strong>Цена:</strong> {service.price} ₽
                             </div>
-                            <Button type="primary" className="mt-2 w-fit" onClick={loadSlots}>
-                                Записаться на услугу
-                            </Button>
+                            <div className="mt-2 flex gap-3">
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        if (!store.user) {
+                                            message.warning("Авторизуйтесь, чтобы записаться на услугу");
+                                        } else {
+                                            loadSlots();
+                                        }
+                                    }}
+                                >
+                                    Записаться на услугу
+                                </Button>
+                                <Button
+                                    type="default"
+                                    style={{ backgroundColor: '#52c41a', color: '#fff' }}
+                                    href={`tel:${service.phone || '88005553535'}`}
+                                >
+                                    Позвонить
+                                </Button>
+                            </div>
                         </div>
                     </div>
 
@@ -123,7 +155,15 @@ const ServicePage = () => {
                     <div className="mt-10">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-medium">Отзывы</h3>
-                            <Button onClick={() => setIsFeedbackModalOpen(true)}>
+                            <Button
+                                onClick={() => {
+                                    if (!store.user) {
+                                        message.warning("Авторизуйтесь, чтобы оставить отзыв");
+                                    } else {
+                                        setIsFeedbackModalOpen(true);
+                                    }
+                                }}
+                            >
                                 Оставить отзыв
                             </Button>
                         </div>
@@ -155,6 +195,20 @@ const ServicePage = () => {
                     </div>
                 </Card>
             </div>
+
+            <Modal
+                open={isImageModalOpen}
+                footer={null}
+                onCancel={() => setIsImageModalOpen(false)}
+                centered
+                width="auto"
+            >
+                <img
+                    src={service.mainPhoto || "/placeholder.png"}
+                    alt="Увеличенное изображение"
+                    style={{ width: "100%", height: "auto", maxWidth: "90vw", maxHeight: "80vh" }}
+                />
+            </Modal>
 
             <Modal
                 open={isFeedbackModalOpen}
